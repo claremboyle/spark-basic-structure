@@ -12,6 +12,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+		<version>3.8.0</version>
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
@@ -27,6 +28,45 @@
                     </arguments>
                 </configuration>
             </plugin>
+	    <!-- Make executable jar WITH dependencies -->
+	    <!-- See: https://www.baeldung.com/executable-jar-with-maven -->
+	    <plugin>
+	        <groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<executions>
+		    <execution>
+		       <phase>package</phase>
+		       <goals>
+			  <goal>single</goal>
+		       </goals>
+		       <configuration>
+			  <archive>
+			     <manifest>
+		                <mainClass>app.Application</mainClass>
+			     </manifest>
+			  </archive>
+			  <descriptorRefs>
+			     <descriptorRef>jar-with-dependencies</descriptorRef>
+			  </descriptorRefs>
+		       </configuration>
+		    </execution>
+		</executions>
+	    </plugin>
+	    <plugin>
+	      <groupId>com.heroku.sdk</groupId>
+	      <artifactId>heroku-maven-plugin</artifactId>
+	      <version>0.4.4</version>
+	      <configuration>
+		<jdkVersion>1.8</jdkVersion>
+		<!-- Use your own application name -->
+		<appName>cs56-m18-claremboyle-lab04a</appName> 
+		<processTypes>
+		  <!-- Tell Heroku how to launch your application -->
+		  <!-- You might have to remove the ./ in front   -->
+		  <web>java -jar ./target/spark-basic-structure-1.0-SNAPSHOT-jar-with-dependencies.jar</web>
+		</processTypes>
+	      </configuration>
+	    </plugin>
         </plugins>
     </build>
 
@@ -77,5 +117,4 @@
             <version>0.3m</version>
         </dependency>
     </dependencies>
-
 </project>
